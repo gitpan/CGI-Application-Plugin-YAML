@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:                CGI-Application-Plugin-YAML
-version:             0.01
+version:             0.02
 abstract:            YAML methods CGI::App
 license:             ~
 author:              

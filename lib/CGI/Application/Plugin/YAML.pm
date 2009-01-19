@@ -7,7 +7,9 @@ CGI::Application::Plugin::YAML - YAML methods CGI::App
 
 =head1 SYNOPSIS
 
-Just a little wrapper. Useful to add YAML methods to you CGI::App object.
+Just a little wrapper. Useful to add YAML methods to you CGI::App object. The
+whole YAML module is lazy loaded, so all that gets loaded at first is this
+little wrapper.
 
     use CGI::Application::Plugin::YAML qw( :std );
 
@@ -103,20 +105,23 @@ require Exporter;
     std => [ 'YAML' ],
 );
 
-$VERSION = '0.01';
+$VERSION = '0.02';
 
-$IMPORTGROUP = ':std';
+#$IMPORTGROUP = ':std';
 
 my $yaml;
 
 sub import {
-    local( $IMPORTGROUP );
-    $IMPORTGROUP = $_[1];
-    $yaml = new CGI::Application::Plugin::YAML::guts;
+#    local( $IMPORTGROUP );
+#    $IMPORTGROUP = $_[1];
+    $yaml = new CGI::Application::Plugin::YAML::guts( $_[1] );
     CGI::Application::Plugin::YAML->export_to_level(1, @_);
 }#sub
 
 sub YAML {
+    unless ( $yaml->{params}->{__loaded} ) {
+        $yaml->__LoadYAML();
+    }#unless
     return $yaml;
 }#sub
 
@@ -125,10 +130,17 @@ package CGI::Application::Plugin::YAML::guts;
 
 sub new {
     my $class = shift;
-    require YAML::Any;
-    my $obj = {};
-    if ( $CGI::Application::Plugin::YAML::IMPORTGROUP eq ':all' ) {
-        YAML->import( qw( Dump Load DumpFile LoadFile ) );
+#    require YAML::Any;
+    my $obj = {
+        params => {
+            group => shift,
+        },
+    };
+    $obj->{params}->{group} = ':std' unless $obj->{params}->{group};
+    
+#    if ( $CGI::Application::Plugin::YAML::IMPORTGROUP eq ':all' ) {
+    if ( $obj->{params}->{group} eq ':all' ) {
+#        YAML->import( qw( Dump Load DumpFile LoadFile ) );
         ### Overloading imported routines as class causes problems when called
         sub LoadFile {
             shift; ### get rid of class
@@ -152,6 +164,12 @@ sub new {
     }#sub
     bless( $obj, $class );
     return $obj;
+}#sub
+
+
+sub __LoadYAML {
+    require YAML::Any;
+    YAML->import( qw( Dump Load DumpFile LoadFile ) );
 }#sub
 
 
