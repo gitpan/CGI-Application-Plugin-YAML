@@ -3,7 +3,7 @@ package CGI::Application::Plugin::YAML;
 
 =head1 NAME
 
-CGI::Application::Plugin::YAML - YAML methods CGI::App
+CGI::Application::Plugin::YAML - YAML methods for CGI::App
 
 =head1 SYNOPSIS
 
@@ -76,7 +76,7 @@ L<YAML>
 
 =head1 Come join the bestest Perl group in the World!
 
-Bristol and Bath Perl moungers is renound for being the friendliest Perl group
+Bristol and Bath Perl moungers is renowned for being the friendliest Perl group
 in the world. You don't have to be from the UK to join, everyone is welcome on
 the list:-
 L<http://perl.bristolbath.org>
@@ -105,7 +105,7 @@ require Exporter;
     std => [ 'YAML' ],
 );
 
-$VERSION = '0.02';
+$VERSION = '0.03';
 
 #$IMPORTGROUP = ':std';
 
